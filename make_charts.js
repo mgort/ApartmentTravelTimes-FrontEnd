@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-  get_data("Monday");
+  get_data("Wednesday");
 });
 
 function get_locations() {
@@ -30,10 +30,10 @@ function get_data(day) {
 
   var data_points = [];
 
+
   data.forEach(function(entry) {
     var temp = [];
     temp.push(entry.leave_timestamp.substring(11, 16));
-    temp.
   });
 
   return data;
