@@ -1,7 +1,7 @@
 <?php
 $user="chris";
 $password="tenretni";
-$dbconn = pg_connect("host=192.168.1.102 dbname=ApartmentTravelTimes user=$user password=$password") or die('Could not connect: ' . pg_last_error());
+$dbconn = pg_connect("host=192.168.1.112 dbname=ApartmentTravelTimes user=$user password=$password") or die('Could not connect: ' . pg_last_error());
 // Performing SQL query
 $day = $_GET["day"];
 $query = "SELECT * FROM travel_times WHERE day_of_week = '$day'";
