@@ -2,11 +2,45 @@
 <html>
 <head>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<script src="make_charts.js"></script>
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 </head>
 <body>
+	<div class="container">
+	  <h2>Travel Tiemz</h2>
+	  <ul class="nav nav-tabs">
+	    <li class="active"><a data-toggle="tab" href="#mon">Monday</a></li>
+	    <li><a data-toggle="tab" href="#tues">Tuesday</a></li>
+	    <li><a data-toggle="tab" href="#wed">Wednesday</a></li>
+			<li><a data-toggle="tab" href="#thurs">Thursday</a></li>
+			<li><a data-toggle="tab" href="#fri">Friday</a></li>
+	  </ul>
 
-<p>Hey gurl, hey.</p>
+	  <div class="tab-content">
+	    <div id="mon" class="tab-pane fade in active">
+	      <h3>Monday</h3>
+				<div id="mon_chart"></div>
+	    </div>
+	    <div id="tues" class="tab-pane fade">
+				<h3>Tuesday</h3>
+				<div id="tues_chart"></div>
+	    </div>
+	    <div id="wed" class="tab-pane fade">
+	      <h3>Wednesday</h3>
+				<div id="wed_chart"></div>
+	    </div>
+	    <div id="thurs" class="tab-pane fade">
+	      <h3>Thursday</h3>
+				<div id="thurs_chart"></div>
+	    </div>
+			<div id="fri" class="tab-pane fade">
+				<h3>Friday</h3>
+				<div id="fri_chart"></div>
+			</div>
+	  </div>
+	</div>
 
 </body>
 </html>
