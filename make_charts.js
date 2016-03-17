@@ -29,16 +29,47 @@ function get_data(day, destination) {
     });
 
     var data_points = [];
+    var location_time_map = {};
 
-    for(var i=0; i <= data.length-3; i+=3) {
-        var temp = [];
-        temp.push(data[i].leave_time);
-        temp.push(parseFloat(data[i].avg)/60);       // Arvada Station
-        temp.push(parseFloat(data[i+1].avg)/60);     // Park Place Olde Town
-        temp.push(parseFloat(data[i+2].avg)/60);     // Water Tower Flats
-        console.log(temp);
+    var location_index_map = {
+        "Arvada Station": 0,
+        "Park Place Olde Town": 1,
+        "Water Tower Flats": 2,
+        "Belmar": 3
+    };
+
+    for (var i = 0; i < data.length; ++i) {
+        var leave_time = data[i].leave_time;
+
+        if (!(leave_time in location_time_map)) {
+            location_time_map[leave_time] = [0.0, 0.0, 0.0, 0.0];
+        }
+
+        var travel_time = parseFloat(data[i].avg)/60;
+        var location = data[i].origin;
+        var index = location_index_map[location];
+        location_time_map[leave_time][index] = travel_time;
+    }
+
+
+    for (var leave_time in location_time_map) {
+        var times = location_time_map[leave_time];
+        var temp = [leave_time];
+        for (var i = 0; i < times.length; ++i) {
+            temp.push(parseFloat(times[i]));
+        }
         data_points.push(temp);
     }
+
+    // for(var i=0; i <= data.length-3; i+=3) {
+    //     var temp = [];
+    //     temp.push(data[i].leave_time);
+    //     temp.push(parseFloat(data[i].avg)/60);       // Arvada Station
+    //     temp.push(parseFloat(data[i+1].avg)/60);     // Park Place Olde Town
+    //     temp.push(parseFloat(data[i+2].avg)/60);     // Water Tower Flats
+    //     console.log(temp);
+    //     data_points.push(temp);
+    // }
 
 
     return data_points;
@@ -56,6 +87,10 @@ function draw_all_charts(data) {
     google.charts.setOnLoadCallback(draw_thursday_log);
     google.charts.setOnLoadCallback(draw_friday_eco);
     google.charts.setOnLoadCallback(draw_friday_log);
+    google.charts.setOnLoadCallback(draw_saturday_eco);
+    google.charts.setOnLoadCallback(draw_saturday_log);
+    google.charts.setOnLoadCallback(draw_sunday_eco);
+    google.charts.setOnLoadCallback(draw_sunday_log);
 }
 
 function draw_base_chart(day, destination, div_name) {
@@ -67,6 +102,7 @@ function draw_base_chart(day, destination, div_name) {
     dataTable.addColumn('number', 'Arvada Station');
     dataTable.addColumn('number', 'Park Place Olde Town');
     dataTable.addColumn('number', 'Water Tower Flats');
+    dataTable.addColumn('number', 'Belmar');
 
     dataTable.addRows(data);
 
@@ -107,6 +143,14 @@ function draw_friday_eco() {
     draw_base_chart("Friday", "Ecocion", 'e_fri_chart');
 }
 
+function draw_saturday_eco() {
+    draw_base_chart("Saturday", "Ecocion", 'e_sat_chart');
+}
+
+function draw_sunday_eco() {
+    draw_base_chart("Sunday", "Ecocion", 'e_sun_chart');
+}
+
 function draw_monday_log() {
     draw_base_chart("Monday", "LogRhythm", 'l_mon_chart');
 }
@@ -125,4 +169,12 @@ function draw_thursday_log() {
 
 function draw_friday_log() {
     draw_base_chart("Friday", "LogRhythm", 'l_fri_chart');
+}
+
+function draw_saturday_log() {
+    draw_base_chart("Saturday", "LogRhythm", 'l_sat_chart');
+}
+
+function draw_sunday_log() {
+    draw_base_chart("Sunday", "LogRhythm", 'l_sun_chart');
 }
