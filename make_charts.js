@@ -17,6 +17,25 @@ function get_locations() {
     return locations;
 }
 
+function get_number_of_apartments() {
+    return get_apartment_list().length;
+}
+
+function get_apartment_index_map() {
+    var apartment_map = {};
+    var apartment_list = get_apartment_list();
+    for (var i = 0; i < apartment_list.length; ++i) {
+        var apartment_name = apartment_list[i];
+        apartment_map[apartment_name] = i;
+    }
+
+    return apartment_map;
+}
+
+function get_apartment_list() {
+    return ["Water Tower Flats", "Belmar"];
+}
+
 function get_data(day, destination) {
     var data;
     $.ajax({
@@ -31,46 +50,40 @@ function get_data(day, destination) {
     var data_points = [];
     var location_time_map = {};
 
-    var location_index_map = {
-        "Arvada Station": 0,
-        "Park Place Olde Town": 1,
-        "Water Tower Flats": 2,
-        "Belmar": 3
-    };
+    var apartment_index_map = get_apartment_index_map();
 
     for (var i = 0; i < data.length; ++i) {
         var leave_time = data[i].leave_time;
 
         if (!(leave_time in location_time_map)) {
-            location_time_map[leave_time] = [0.0, 0.0, 0.0, 0.0];
+            location_time_map[leave_time] = new Array(get_number_of_apartments());
         }
 
         var travel_time = parseFloat(data[i].avg)/60;
         var location = data[i].origin;
-        var index = location_index_map[location];
+        var index = apartment_index_map[location];
         location_time_map[leave_time][index] = travel_time;
     }
 
 
+    var last_times = new Array(get_number_of_apartments());
     for (var leave_time in location_time_map) {
         var times = location_time_map[leave_time];
         var temp = [leave_time];
+        // ZOH to fix the case where some data is missing
         for (var i = 0; i < times.length; ++i) {
-            temp.push(parseFloat(times[i]));
+            var time = times[i];
+            if (time == null) {
+                var last_time = last_times[i];
+                temp.push(parseFloat(last_time));
+            } else {
+                temp.push(parseFloat(time));
+            }
+
         }
         data_points.push(temp);
+        last_times = times;
     }
-
-    // for(var i=0; i <= data.length-3; i+=3) {
-    //     var temp = [];
-    //     temp.push(data[i].leave_time);
-    //     temp.push(parseFloat(data[i].avg)/60);       // Arvada Station
-    //     temp.push(parseFloat(data[i+1].avg)/60);     // Park Place Olde Town
-    //     temp.push(parseFloat(data[i+2].avg)/60);     // Water Tower Flats
-    //     console.log(temp);
-    //     data_points.push(temp);
-    // }
-
 
     return data_points;
 }
@@ -99,10 +112,10 @@ function draw_base_chart(day, destination, div_name) {
     var data = get_data(day, destination);
 
     dataTable.addColumn('string', 'Departure Time');
-    dataTable.addColumn('number', 'Arvada Station');
-    dataTable.addColumn('number', 'Park Place Olde Town');
-    dataTable.addColumn('number', 'Water Tower Flats');
-    dataTable.addColumn('number', 'Belmar');
+    var sorted_apartments = get_apartment_list();
+    for (var i = 0; i < sorted_apartments.length; ++i) {
+        dataTable.addColumn('number', sorted_apartments[i]);
+    }
 
     dataTable.addRows(data);
 
